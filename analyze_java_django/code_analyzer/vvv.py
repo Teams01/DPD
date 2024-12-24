@@ -23,29 +23,6 @@ class JavaCodeAnalyzer:
             raise ValueError(f"Invalid Java syntax: {e}")
 
     def get_coupling(self):
-        """
-        Detects class-level coupling by analyzing dependencies in field and method declarations.
-        """
-        class_relations = defaultdict(list)
-        classes = [node for path, node in self.tree.filter(javalang.tree.ClassDeclaration)]
-
-        for cls in classes:
-            for body in cls.body:
-                # Check for field declarations
-                if isinstance(body, javalang.tree.FieldDeclaration):
-                    for declarator in body.declarators:
-                        class_relations[cls.name].append(declarator.name)
-
-                # Check for method statements that use other class members
-                elif isinstance(body, javalang.tree.MethodDeclaration):
-                    for stmt in (body.body or []):
-                        if isinstance(stmt, javalang.tree.StatementExpression) and hasattr(stmt.expression, 'member'):
-                            class_relations[cls.name].append(stmt.expression.member)
-
-        logger.debug(f"Class relations detected: {class_relations}")
-        return class_relations
-
-    def detect_coupling(self):
         class_relations = defaultdict(set)
         classes = [node for path, node in self.tree.filter(javalang.tree.ClassDeclaration)]
         for cls in classes:
@@ -81,19 +58,30 @@ class JavaCodeAnalyzer:
 
     def detect_duplication(self):
         """
-        Detects duplicated lines of code in the Java source.
+        Detects duplicated lines and blocks of code in the Java source.
         """
         lines = self.code.split("\n")
-        line_count = defaultdict(int)
+        line_blocks = defaultdict(list)  # Garde les blocs de code associés aux classes/méthodes
+        block_size = 4  # Taille des blocs pour analyser les duplications
 
-        for line in lines:
-            stripped = line.strip()
-            if stripped:
-                line_count[stripped] += 1
+        # Découpage des blocs de code
+        for i in range(len(lines) - block_size + 1):
+            block = "\n".join(lines[i:i + block_size]).strip()
+            if block:  # Éviter les blocs vides
+                line_blocks[block].append(i)
 
-        duplicates = {line: count for line, count in line_count.items() if count > 1}
-        logger.debug(f"Code duplication detected: {duplicates}")
-        return duplicates
+        # Identifier les blocs récurrents
+        duplicates = {block: indices for block, indices in line_blocks.items() if len(indices) > 1}
+
+        # Réduire les résultats pour ignorer les blocs triviaux
+        filtered_duplicates = {
+            block: indices
+            for block, indices in duplicates.items()
+            if len(block.split("\n")) >= block_size and not block.startswith("//")
+        }
+
+        logger.debug(f"Duplications detected: {filtered_duplicates}")
+        return filtered_duplicates
 
     def detect_design_patterns(self):
         """
@@ -276,8 +264,8 @@ class JavaCodeAnalyzer:
         recommendations = []
 
         # Detect high coupling
-        coupling = self.get_coupling()
-        if any(len(deps) > 3 for deps in coupling.values()):
+        coupling = self.detect_coupling()
+        if any(len(deps) > 1 for deps in coupling.values()):
             recommendations.append("High coupling detected. Use Facade or Mediator to reduce dependencies.")
 
         # Detect code duplication

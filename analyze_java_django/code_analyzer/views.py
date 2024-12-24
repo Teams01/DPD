@@ -16,9 +16,8 @@ def analyze_java_code(request):
         )
 
     try:
-        # Parse JSON request body
-        data = json.loads(request.body)
-        java_code = data.get('java_code', '').strip()
+        data = request.body.decode('utf-8', errors='replace')
+        java_code = json.loads(data).get('java_code', '').strip()
 
         if not java_code:
             return JsonResponse(
@@ -26,11 +25,9 @@ def analyze_java_code(request):
                 status=400
             )
 
-        # Analyze Java code
         analyzer = JavaCodeAnalyzer(java_code)
         recommendations = analyzer.recommend_patterns()
 
-        # Return successful response
         return JsonResponse(
             {"status": "success", "recommendations": recommendations},
             status=200
@@ -54,6 +51,52 @@ def analyze_java_code(request):
             {"status": "error", "message": "An unexpected error occurred."},
             status=500
         )
+
+@csrf_exempt
+def analyze_Coupling(request):
+    if request.method != 'POST':
+        return JsonResponse(
+            {"status": "error", "message": "Invalid request method."},
+            status=405
+        )
+
+    try:
+        data = json.loads(request.body.decode('utf-8', errors='replace'))
+        java_code = data.get('java_code', '').strip()
+
+        if not java_code:
+            return JsonResponse(
+                {"status": "error", "message": "No Java code provided."},
+                status=400
+            )
+
+        analyzer = JavaCodeAnalyzer(java_code)
+        dependencies = analyzer.detect_coupling()
+
+        return JsonResponse(
+            {"status": "success", "dependencies": dependencies},
+            status=200
+        )
+
+    except json.JSONDecodeError:
+        logger.error("Invalid JSON format in request.")
+        return JsonResponse(
+            {"status": "error", "message": "Invalid JSON format."},
+            status=400
+        )
+    except ValueError as e:
+        logger.error(f"ValueError during analysis: {str(e)}")
+        return JsonResponse(
+            {"status": "error", "message": str(e)},
+            status=400
+        )
+    except Exception as e:
+        logger.exception("Unexpected error during Java code analysis.")
+        return JsonResponse(
+            {"status": "error", "message": "An unexpected error occurred."},
+            status=500
+        )
+
 
 @csrf_exempt
 def generate_java_classes(request):
