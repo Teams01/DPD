@@ -23,6 +23,7 @@
           <div class="d-flex gap-2">
             <button class="btn btn-primary w-50" (click)="analyzeCode()">Analyze Code</button>
             <button class="btn btn-success w-50" (click)="generateCode()">Generate Classes</button>
+            <button class="btn btn-primary w-50" (click)="detectCoupling()">Generate Classes</button>
           </div>
         
           <!-- Affichage des erreurs -->
@@ -43,6 +44,13 @@
             <h5>Generated Code:</h5>
             <pre>{{ generatedCode }}</pre>
           </div>
+
+          <!-- Affichage des dépendances détectées -->
+          <div *ngIf="generatedCodeCoupling" class="alert alert-info mt-4">
+            <h5>Detected Dependencies:</h5>
+            <pre>{{ generatedCodeCoupling | json }}</pre>
+          </div>
+          
         </div>
         
        

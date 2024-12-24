@@ -16,6 +16,9 @@ export class UserProfileComponent implements OnInit {
   userForm: FormGroup;
   userIn: any;
   passwordForm!: FormGroup;
+  isPhotoModalOpen = false;
+  photoForm: FormGroup;
+  selectedFile: File;
 
   constructor(private fb: FormBuilder, private AuthService: AuthService) {
     this.userForm = this.fb.group({
@@ -23,6 +26,9 @@ export class UserProfileComponent implements OnInit {
       lastname: [""],
       email: [""],
       phoneNumber: [""],
+    });
+    this.photoForm = this.fb.group({
+      newPhoto: [null],
     });
   }
   ngOnInit(): void {
@@ -119,4 +125,39 @@ export class UserProfileComponent implements OnInit {
       },
     });
   }
+
+
+  openPhotoModal() {
+    this.isPhotoModalOpen = true;
+  }
+
+  closePhotoModal() {
+    this.isPhotoModalOpen = false;
+    this.photoForm.reset();
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      console.log('gtue;pddd')
+      this.selectedFile = input.files[0];
+    }
+  }
+
+  onPhotoUpdate() {
+    const userId = localStorage.getItem("userID");
+    if (this.selectedFile) {
+      this.AuthService.updateUserImage(userId, this.selectedFile).subscribe(
+        (response) => {
+          console.log('Photo updated successfully:', response);
+          this.userIn.image = response.imageUrl; // Optionnel, pour mettre à jour l'affichage
+          this.closePhotoModal();
+        },
+        (error) => {
+          console.error('Error updating photo:', error);
+        }
+      );
+    }
+  }
+  
 }

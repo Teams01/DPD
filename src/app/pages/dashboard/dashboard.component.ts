@@ -25,6 +25,7 @@ export class DashboardComponent  {
   recommendations: any[] = [];
   generatedCode: string = '';
   errorMessage: string = '';
+  generatedCodeCoupling :string = '';
 
   constructor(private http: HttpClient) {}
 
@@ -68,6 +69,7 @@ export class DashboardComponent  {
           this.responseMessage = response.status;
           this.recommendations = response.recommendations || [];
           this.generatedCode = ''; // Clear generated code on new analysis
+          this.generatedCodeCoupling='';
         },
         error: (error) => {
           this.errorMessage = error.error?.message || 'An error occurred while analyzing the Java code.';
@@ -100,10 +102,47 @@ export class DashboardComponent  {
         next: (response) => {
           this.generatedCode = response.new_code || 'No code generated.';
           this.recommendations = []; // Clear recommendations on new generation
+          this.generatedCodeCoupling='';
         },
         error: (error) => {
           this.errorMessage = error.error?.message || 'An error occurred while generating the Java code.';
           this.generatedCode = '';
+        }
+      });
+  }
+
+
+
+  detectCoupling() {
+    if (!this.javaCode.trim()) {
+      this.errorMessage = "Please provide valid Java code.";
+      this.generatedCode = '';
+      return;
+    }
+  
+    this.errorMessage = '';
+    const generateUrl = 'http://localhost:8080/api/analyze_coupling'; // API Spring pour générer
+    const headers = this.createAuthorizationHeader();
+  
+    if (!headers) {
+      this.errorMessage = "Authorization header not set. Please log in.";
+      return;
+    }
+  
+    // Envoyer un objet JSON avec la clé "java_code"
+    const requestBody = { java_code: this.javaCode };
+  
+    this.http.post<any>(generateUrl, requestBody, { headers })
+      .subscribe({
+        next: (response) => {
+          this.generatedCodeCoupling = response.dependencies || 'No code generated.';
+          this.recommendations = []; // Clear recommendations on new generation
+          this.generatedCode=""
+        },
+        error: (error) => {
+          this.errorMessage = error.error?.message || 'An error occurred while detect coupling in the Java code.';
+          this.generatedCode = '';
+          this.generatedCodeCoupling ='';
         }
       });
   }

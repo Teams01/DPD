@@ -10,5 +10,6 @@ import { ProjectDetailsComponent } from '../../pages/project-details/project-det
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard',      component: DashboardComponent },
+    { path: 'user-profile',   component: UserProfileComponent },
 
 ];

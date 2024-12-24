@@ -153,4 +153,19 @@ export class AuthService {
       { headers: this.createAuhtorizationHeader(), responseType: "text" }
     );
   }
+  updateUserImage(userId: string, imageFile: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+  
+    const headers = this.createAuhtorizationHeader();
+  
+    return this.http.post(
+      `${BASE_URL}api/users1/image/${userId}`, 
+      formData, 
+      { headers } // Assurez-vous que `headers` est correct
+    );
+  }
+
+
+  
 }

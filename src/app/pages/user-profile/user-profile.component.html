@@ -18,7 +18,31 @@
         
        
         <div class="profile-card">
-          <img src={{userIn.image}} alt="Photo de profil"  class="avatar">
+          <img src="{{userIn.image}}" alt="Photo de profil" class="avatar" (click)="openPhotoModal()" />
+          
+          <div class="modal fade" [class.show]="isPhotoModalOpen" [style.display]="isPhotoModalOpen ? 'block' : 'none'">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Update Profile Photo</h5>
+                  <button type="button" class="btn-close" aria-label="Close" (click)="closePhotoModal()"></button>
+                </div>
+                <div class="modal-body">
+                  <form [formGroup]="photoForm" (ngSubmit)="onPhotoUpdate()">
+                    <div class="form-group">
+                      <label for="newPhoto">Select new photo</label>
+                      <input type="file" id="newPhoto" class="form-control" (change)="onFileSelected($event)" />
+                    </div>
+                    <div class="text-center mt-4">
+                      <button type="submit" class="btn btn-primary" [disabled]="!photoForm.valid">Update Photo</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-backdrop fade" [class.show]="isPhotoModalOpen" *ngIf="isPhotoModalOpen"></div>
+          
           <div class="user-details">
           <h2>{{userIn.lastname}} {{userIn.firstname}}</h2>
           
