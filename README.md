@@ -177,5 +177,11 @@ The application offers the following key features:
 This AI-driven tool bridges the gap between code analysis and design pattern implementation. By integrating cutting-edge technologies across backend and frontend platforms, it empowers developers to optimize their software architecture efficiently and effectively.
 
 ---
+## vidéo démonstrative
+
+
+https://github.com/user-attachments/assets/b6abdd88-cb02-460d-a1b9-9f4f49b86d7a
+
+
 
 
