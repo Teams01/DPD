@@ -76,22 +76,18 @@ The application offers the following key features:
 ##### Django Service
 1. Navigate to the Django service directory:
    ```bash
-   cd backend/django_service
+   cd analyze_java_django
    ```
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
-   ```
-3. Install dependencies:
+
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-4. Apply database migrations:
+3. Apply database migrations:
    ```bash
    python manage.py migrate
    ```
-5. Start the Django server:
+4. Start the Django server:
    ```bash
    python manage.py runserver
    ```
@@ -99,17 +95,18 @@ The application offers the following key features:
 ##### Spring Boot Service
 1. Navigate to the Spring Boot service directory:
    ```bash
-   cd backend/spring_service
+   cd projectSpring
    ```
 2. Build and start the service:
    ```bash
-   ./mvnw spring-boot:run
+   mvn clean install
+   mvnw spring-boot:run
    ```
 
 #### Setting Up the Frontend
 1. Navigate to the Angular app directory:
    ```bash
-   cd frontend
+   cd frontAngular
    ```
 2. Install dependencies:
    ```bash
@@ -119,7 +116,39 @@ The application offers the following key features:
    ```bash
    ng serve
    ```
-
+#### Setting Up Flutter
+1. Install dependencies:
+ ```bash
+   flutter pub get
+   ```
+2. Run
+   ```bash
+   flutter run
+   ```
+   #### Docker/Docker-Compose
+   1. pour crear l'image de backend spring
+   
+   ```bash
+   cd projectSpring
+   docker build -t backend-Spring:latest
+   ```
+   2. pour crear l'image de FrontEnd
+   
+   ```bash
+   cd frontAngular
+   docker build -t frontAngular:latest
+   ```
+   3. pour crear l'image de Django
+    ```bash
+   cd analyze_java_django
+   docker build -t backendDjango:latest
+   ```
+   4. run container pour tous les image docker
+    ```bash
+   cd projectSpring
+   docker-compose up -d
+   ```
+      
 ---
 
 ## Discussion
