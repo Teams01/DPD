@@ -56,7 +56,8 @@ The application offers the following key features:
 
 ---
 # App structer
-![image](https://github.com/user-attachments/assets/7fef4ca4-11a5-4af8-bb7b-2cc40a47dec3)
+![image](https://github.com/user-attachments/assets/f497a056-11be-4c98-bd8c-c47df51a252c)
+
 
 ## Experimental Setup
 
