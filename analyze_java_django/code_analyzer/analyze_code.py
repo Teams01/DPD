@@ -145,7 +145,7 @@ class JavaCodeAnalyzer:
         """
         modified_code = self.code.split('\n')  # Start with the existing code
         detected_patterns = self.detect_design_patterns()
-        coupling_issues = self.detect_coupling()
+        coupling_issues = self.get_coupling()
         duplication_issues = self.detect_duplication()
 
         for pattern in detected_patterns:
@@ -157,8 +157,9 @@ class JavaCodeAnalyzer:
                 modified_code.extend(self.generate_observer_classes())
 
         # Handle coupling issues
+
         for class_name, dependencies in coupling_issues.items():
-            if len(dependencies) > 3:
+            if len(dependencies) > 2:
                 modified_code.extend(self.apply_mediator_or_facade_pattern(class_name, dependencies))
 
         # Handle duplication issues
@@ -277,7 +278,7 @@ class JavaCodeAnalyzer:
 
         # Detect high coupling
         coupling = self.get_coupling()
-        if any(len(deps) > 3 for deps in coupling.values()):
+        if any(len(deps) > 2 for deps in coupling.values()):
             recommendations.append("High coupling detected. Use Facade or Mediator to reduce dependencies.")
 
         # Detect code duplication

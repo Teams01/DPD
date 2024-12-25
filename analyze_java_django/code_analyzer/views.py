@@ -107,7 +107,8 @@ def generate_java_classes(request):
         )
 
     try:
-        data = json.loads(request.body)
+
+        data = json.loads(request.body.decode('utf-8', errors='replace'))
         java_code = data.get('java_code', '').strip()
 
         if not java_code:
