@@ -55,6 +55,8 @@ The application offers the following key features:
 - **Security:** JSON Web Tokens (JWT)
 
 ---
+# App structer
+![image](https://github.com/user-attachments/assets/7fef4ca4-11a5-4af8-bb7b-2cc40a47dec3)
 
 ## Experimental Setup
 
