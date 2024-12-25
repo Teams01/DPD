@@ -177,8 +177,4 @@ This AI-driven tool bridges the gap between code analysis and design pattern imp
 
 ---
 
-## References
-1. Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). *Design Patterns: Elements of Reusable Object-Oriented Software*.
-2. Freeman, E., & Robson, E. (2004). *Head First Design Patterns*.
-3. Fowler, M. (2002). *Patterns of Enterprise Application Architecture*.
 
