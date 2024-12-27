@@ -40,18 +40,24 @@ def read_java_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         return file.read()
 
+
 def analyze_java_code(model, java_code, file_name):
-    """Analyser un fichier Java"""
+    """Analyser un fichier Java pour recommander des patrons de conception adaptés"""
+    # Instruction pour le modèle AI
     prompt = f"""
-    Analyze this Java code from file '{file_name}' and suggest appropriate design patterns that could improve its structure.
-    If no design pattern is needed, explicitly state that.
+    Analyser ce code Java provenant du fichier '{file_name}' et identifier les problèmes récurrents tels que le couplage élevé, la duplication de code, et d'autres antipatterns courants.
+    Proposez ensuite des patrons de conception appropriés pour résoudre ces problèmes.
 
     {java_code}
 
-    Please provide:
-    1. The needed design pattern (explain briefly)
-    2. The name of the file analyzed and the generated code
+    Veuillez :
+    1. Identifier les problèmes récurrents (par exemple : couplage élevé, duplication de code, etc.).
+    2. Proposer un ou plusieurs patrons de conception pour chaque problème identifié.
+    3. Fournir une explication brève pour chaque patron de conception proposé.
+    4. Mentionner le nom du fichier analysé et le code généré.
     """
+
+    # Appel au modèle pour obtenir des recommandations
     response = model.generate_content(prompt)
     return response.text
 def remove_git_metadata(directory):

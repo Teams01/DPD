@@ -4,6 +4,15 @@ import json
 from .analyze_code import JavaCodeAnalyzer
 import logging
 
+
+import os
+import shutil
+import git
+import glob
+import google.generativeai as genai
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 # Configure logging
 logger = logging.getLogger(__name__)
 
