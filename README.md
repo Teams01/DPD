@@ -212,7 +212,11 @@ This AI-driven tool bridges the gap between code analysis and design pattern imp
 ## vidéo démonstrative
 
 
-https://github.com/user-attachments/assets/b6abdd88-cb02-460d-a1b9-9f4f49b86d7a
+https://github.com/user-attachments/assets/fad5a091-ac35-4015-aca4-db742d388681
+
+
+
+
 
 
 
