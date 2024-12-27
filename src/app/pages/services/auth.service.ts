@@ -50,6 +50,19 @@ export class AuthService {
     return null;
   }
 
+  analyzeRepo(repoUrl: string): Observable<any> {
+    const apiUrl = 'http://localhost:8080/api/analyze_repoGit';
+
+    // Options HTTP avec entête d'autorisation
+    const headers = this.createAuhtorizationHeader();
+    const options = { headers: headers };
+
+    return this.http.post(apiUrl, { repo_url: repoUrl }, options);
+  }
+
+
+
+
   getProjectById(id: string): Observable<any> {
     return this.http.get<any>(`${BASE_URL + "api/projects"}/${id}`, {
       headers: this.createAuhtorizationHeader(),
@@ -165,7 +178,7 @@ export class AuthService {
       { headers } // Assurez-vous que `headers` est correct
     );
   }
-
+  
 
   
 }

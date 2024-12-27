@@ -1,10 +1,73 @@
-textarea {
-  resize: none;
+/* Custom Styles */
+.header {
+  background-color: #f06548; /* Couleur d'arrière-plan plus vive pour attirer l'attention */
+  color: #fff; /* Texte blanc pour contraste */
 }
 
-pre {
-  background: #f8f9fa;
-  padding: 10px;
-  border-radius: 5px;
-  overflow-x: auto;
+.card {
+  border-radius: 15px; /* Bordures arrondies pour le card */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Effet de ombre léger */
+}
+
+.card-body {
+  padding: 2rem; /* Augmenter les espaces de padding pour un meilleur espacement */
+}
+
+.btn-primary {
+  background-color: #f06548;
+  border-color: #f06548;
+}
+
+.btn-primary:hover {
+  background-color: #e04124;
+  border-color: #e04124;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+}
+
+.mt-5 {
+  margin-top: 3rem !important; /* Espace de haut pour le titre */
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-danger {
+  color: #e84141;
+}
+
+.bg-light {
+  background-color: #f9f9f9;
+}
+
+.rounded {
+  border-radius: 10px; /* Bordures arrondies pour les boîtes de pré */
+}
+.result-section {
+  margin-top: 2rem;
+}
+
+.result-item {
+  margin-bottom: 1.5rem;
+}
+
+.result-item h3 {
+  color: #333; /* Couleur du nom du fichier pour contraste */
+}
+
+.result-item pre {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  overflow-x: auto; /* Permet d'afficher le contenu sur plusieurs lignes */
+  white-space: pre-wrap; /* Pour maintenir le formatage des retours à la ligne */
 }

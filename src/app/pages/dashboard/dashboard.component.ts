@@ -20,14 +20,16 @@ import {
   providers: [NgbModalConfig, NgbModal],
 })
 export class DashboardComponent  {
-  javaCode: string = '';
-  responseMessage: string = '';
-  recommendations: any[] = [];
-  generatedCode: string = '';
-  errorMessage: string = '';
-  generatedCodeCoupling :string = '';
 
-  constructor(private http: HttpClient) {}
+  repoUrl: string = '';
+  result: any;
+  loading: boolean = false; // Variable de chargement
+  error: string = ''; // Message d'erreur
+  state: 'idle' | 'cloning' | 'analyzing' | 'generating' | 'complete' = 'idle'; // State pour suivre les étapes
+
+
+
+  constructor(private apiService: AuthService) {}
 
   // Ajoute un en-tête d'autorisation avec le JWT
   private createAuthorizationHeader(): HttpHeaders | null {
@@ -43,109 +45,36 @@ export class DashboardComponent  {
       return null;
     }
   }
+  
+  analyzeRepo( repo) {
+    this.state = 'cloning'; // Changer l'état à 'cloning'
+    this.loading = true; // Activer le chargement
+    this.error = ''; // Réinitialiser les erreurs précédentes
+    if (this.repoUrl.trim() === '') {
+      alert('Veuillez entrer une URL valide du dépôt GitHub.');
+      return;
+    }
 
-  analyzeCode() {
-    if (!this.javaCode.trim()) {
-      this.errorMessage = "Please provide valid Java code.";
-      this.recommendations = [];
-      return;
-    }
-  
-    this.errorMessage = '';
-    const analyzeUrl = 'http://localhost:8080/api/analyze-java-code'; // API Spring pour analyser
-    const headers = this.createAuthorizationHeader();
-  
-    if (!headers) {
-      this.errorMessage = "Authorization header not set. Please log in.";
-      return;
-    }
-  
-    // Envoyer un objet JSON avec la clé "java_code"
-    const requestBody = { java_code: this.javaCode };
-  
-    this.http.post<any>(analyzeUrl, requestBody, { headers })
-      .subscribe({
-        next: (response) => {
-          this.responseMessage = response.status;
-          this.recommendations = response.recommendations || [];
-          this.generatedCode = ''; // Clear generated code on new analysis
-          this.generatedCodeCoupling='';
-        },
-        error: (error) => {
-          this.errorMessage = error.error?.message || 'An error occurred while analyzing the Java code.';
-          this.recommendations = [];
-        }
-      });
-  }
-  
-  generateCode() {
-    if (!this.javaCode.trim()) {
-      this.errorMessage = "Please provide valid Java code.";
-      this.generatedCode = '';
-      return;
-    }
-  
-    this.errorMessage = '';
-    const generateUrl = 'http://localhost:8080/api/generate-java-pattern'; // API Spring pour générer
-    const headers = this.createAuthorizationHeader();
-  
-    if (!headers) {
-      this.errorMessage = "Authorization header not set. Please log in.";
-      return;
-    }
-  
-    // Envoyer un objet JSON avec la clé "java_code"
-    const requestBody = { java_code: this.javaCode };
-  
-    this.http.post<any>(generateUrl, requestBody, { headers })
-      .subscribe({
-        next: (response) => {
-          this.generatedCode = response.new_code || 'No code generated.';
-          this.recommendations = []; // Clear recommendations on new generation
-          this.generatedCodeCoupling='';
-        },
-        error: (error) => {
-          this.errorMessage = error.error?.message || 'An error occurred while generating the Java code.';
-          this.generatedCode = '';
-        }
-      });
+    this.apiService.analyzeRepo(repo).subscribe(
+      (data) => {
+        this.state = 'analyzing'; // Changer à 'analyzing' après clonage
+        setTimeout(() => {
+          this.result = data; // Stocker le résultat après clonage et analyse
+          this.state = 'generating'; // Changer à 'generating' après l'analyse
+          setTimeout(() => {
+            this.state = 'complete'; // Étape finale
+          }, 5000); // 5 secondes après génération pour montrer le message "Terminé"
+        }, 10000); // Attendre 10 secondes pour le clonage
+        this.loading = false;
+      },
+      (error) => {
+        this.loading = false;
+        console.error('Erreur lors de l\'analyse du repo :', error);
+      }
+    );
   }
 
 
-
-  detectCoupling() {
-    if (!this.javaCode.trim()) {
-      this.errorMessage = "Please provide valid Java code.";
-      this.generatedCode = '';
-      return;
-    }
-  
-    this.errorMessage = '';
-    const generateUrl = 'http://localhost:8080/api/analyze_coupling'; // API Spring pour générer
-    const headers = this.createAuthorizationHeader();
-  
-    if (!headers) {
-      this.errorMessage = "Authorization header not set. Please log in.";
-      return;
-    }
-  
-    // Envoyer un objet JSON avec la clé "java_code"
-    const requestBody = { java_code: this.javaCode };
-  
-    this.http.post<any>(generateUrl, requestBody, { headers })
-      .subscribe({
-        next: (response) => {
-          this.generatedCodeCoupling = response.dependencies || 'No code generated.';
-          this.recommendations = []; // Clear recommendations on new generation
-          this.generatedCode=""
-        },
-        error: (error) => {
-          this.errorMessage = error.error?.message || 'An error occurred while detect coupling in the Java code.';
-          this.generatedCode = '';
-          this.generatedCodeCoupling ='';
-        }
-      });
-  }
   
 
 }
