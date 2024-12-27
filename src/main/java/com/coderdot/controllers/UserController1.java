@@ -73,6 +73,7 @@ public class UserController1 {
     /**
      * Mettre à jour l'image d'un utilisateur.
      */
+
     @PostMapping("/image/{id}")
     public ResponseEntity<String> updateImage(
             @PathVariable Long id,

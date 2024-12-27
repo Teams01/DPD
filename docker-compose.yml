@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   spring-boot-app:
     image:  applicationspringboot
@@ -7,23 +6,20 @@ services:
       - "8080:8080"
     depends_on:
       - mysql
-
   angular-app:
     image: application-angular
     ports:
       - "4200:4200"
   django-app:
-    image: django-application  # Remplacez par le nom de l'image Django que vous avez créée
+    image: django-application
     ports:
       - "8000:8000"
-
   mysql:
     image: mysql:8.0
     container_name: mysqlDP
     environment:
-      MYSQL_ROOT_PASSWORD: 1213  # Définir un mot de passe pour le root
+      MYSQL_ROOT_PASSWORD: 1213  
       MYSQL_DATABASE: dp
-
     ports:
       - "3306:3306"
     volumes:
